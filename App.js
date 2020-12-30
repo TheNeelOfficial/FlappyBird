@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, StyleSheet, View, TouchableWithoutFeedback } from 'react-native';
 import Bird from './components/Bird';
 import Obstacles from './components/Obstacles';
 
@@ -21,7 +21,7 @@ export default function App() {
   const obstacleWidth = 60
   const obstacleHeight = 300
 
-  const gap = 50
+  const gap = 200
 
   const [isGameOver, setIsGameOver]= useState(false)
   const [score, setScore]= useState(0)
@@ -42,6 +42,14 @@ export default function App() {
       }
     }
   }, [birdBottom])
+
+
+
+  const jump = () => {
+    if (!isGameOver && (birdBottom < screenHeight)) {
+      setBirdBottom(birdBottom => birdBottom + 50)
+    }
+  }
 
 
   //start first obstacle
@@ -78,29 +86,31 @@ export default function App() {
 
 
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <Bird 
-        birdBottom={birdBottom}
-        birdLeft={birdLeft}
-      />
-      <Obstacles 
-        color={'green'}
-        obstacleWidth = {obstacleWidth}
-        obstacleHeight = {obstacleHeight}
-        randomBottom = {obstaclesNegHeightTwo}
-        gap = {gap}
-        obstaclesLeft = {obstaclesLeftTwo}
-      />       
-      <Obstacles 
-        color={'yellow'}
-        obstacleWidth = {obstacleWidth}
-        obstacleHeight = {obstacleHeight}
-        randomBottom = {obstaclesNegHeightTwo}
-        gap = {gap}
-        obstaclesLeft = {obstaclesLeftTwo}
-      />    
-    </View>
+    <TouchableWithoutFeedback onPress={jump}>
+      <View style={styles.container}>
+        <StatusBar style="auto" />
+        <Bird 
+          birdBottom={birdBottom}
+          birdLeft={birdLeft}
+        />
+        <Obstacles 
+          color={'green'}
+          obstacleWidth = {obstacleWidth}
+          obstacleHeight = {obstacleHeight}
+          randomBottom = {obstaclesNegHeightTwo}
+          gap = {gap}
+          obstaclesLeft = {obstaclesLeftTwo}
+        />       
+        <Obstacles 
+          color={'yellow'}
+          obstacleWidth = {obstacleWidth}
+          obstacleHeight = {obstacleHeight}
+          randomBottom = {obstaclesNegHeightTwo}
+          gap = {gap}
+          obstaclesLeft = {obstaclesLeftTwo}
+        />    
+      </View>
+    </TouchableWithoutFeedback>
   );
 
 }
