@@ -1,4 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
+import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useState } from 'react';
 import { Dimensions, StyleSheet, View, TouchableWithoutFeedback, Text } from 'react-native';
 import Bird from './components/Bird';
@@ -113,7 +114,7 @@ export default function App() {
 
   return (
     <TouchableWithoutFeedback onPress={jump}>
-      <View style={styles.container}>
+      <LinearGradient colors={['#96E2FE', '#63D0FF']} style={styles.container}>
         <StatusBar style="auto" />
         {isGameOver && <Text style={{ fontSize: 24, marginLeft: 30, marginTop: 50,   zIndex: 3, elevation: 3 }}>{score}</Text>}
         <Bird 
@@ -136,7 +137,7 @@ export default function App() {
           gap = {gap}
           obstaclesLeft = {obstaclesLeftTwo}
         />            
-      </View>
+      </LinearGradient>
     </TouchableWithoutFeedback>
   );
 
@@ -145,6 +146,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'red'
+    backgroundColor: '#63D0FF'
   },
 });
