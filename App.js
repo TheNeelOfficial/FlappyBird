@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import Bird from './components/Bird';
+import Obstacles from './components/Obstacles';
 
 export default function App() {
 
@@ -13,7 +14,21 @@ export default function App() {
 
   const gravity = 3
 
+  const [obstaclesLeft, setObstaclesLeft]= useState(screenWidth)
+  const [obstaclesLeftTwo, setObstaclesLeftTwo]= useState(screenWidth + screenWidth/2 + 30)
+  const [obstaclesNegHeight, setObstaclesNegHeight]= useState(0)
+  const [obstaclesNegHeightTwo, setObstaclesNegHeightTwo]= useState(0)
+  const obstacleWidth = 60
+  const obstacleHeight = 300
+
+  const gap = 50
+
+  const [isGameOver, setIsGameOver]= useState(false)
+  const [score, setScore]= useState(0)
+
   let gameTimerId
+  let obstaclesLeftTimerId
+  let obstaclesTimerIdTwo
 
   //start bird falling
   useEffect( () => {
@@ -29,6 +44,39 @@ export default function App() {
   }, [birdBottom])
 
 
+  //start first obstacle
+  useEffect(() => {
+    if (obstaclesLeft > -60) {
+      obstaclesTimerId = setInterval(() => {
+        setObstaclesLeft(obstaclesLeft => obstaclesLeft - 5)
+      }, 30)
+      return () => {
+        clearInterval(obstaclesTimerId)
+      }
+    } else {
+      setScore(score => score +1)
+      setObstaclesLeft(screenWidth)
+      setObstaclesNegHeight( - Math.random() * 100)
+    }
+  }, [obstaclesLeft])
+
+  //start second obstacle
+  useEffect(() => {
+    if (obstaclesLeftTwo > -60) {
+      obstaclesTimerIdTwo = setInterval(() => {
+        setObstaclesLeftTwo(obstaclesLeftTwo => obstaclesLeftTwo - 5)
+      }, 30)
+        return () => {
+          clearInterval(obstaclesTimerIdTwo)
+        }
+      } else {
+          setScore(score => score +1)
+          setObstaclesLeftTwo(screenWidth)
+          setObstaclesNegHeightTwo( - Math.random() * 100)
+        }
+  }, [obstaclesLeftTwo])
+
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -36,6 +84,22 @@ export default function App() {
         birdBottom={birdBottom}
         birdLeft={birdLeft}
       />
+      <Obstacles 
+        color={'green'}
+        obstacleWidth = {obstacleWidth}
+        obstacleHeight = {obstacleHeight}
+        randomBottom = {obstaclesNegHeightTwo}
+        gap = {gap}
+        obstaclesLeft = {obstaclesLeftTwo}
+      />       
+      <Obstacles 
+        color={'yellow'}
+        obstacleWidth = {obstacleWidth}
+        obstacleHeight = {obstacleHeight}
+        randomBottom = {obstaclesNegHeightTwo}
+        gap = {gap}
+        obstaclesLeft = {obstaclesLeftTwo}
+      />    
     </View>
   );
 
@@ -44,8 +108,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: 'red'
   },
 });
