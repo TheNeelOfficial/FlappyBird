@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, StyleSheet, View, TouchableWithoutFeedback } from 'react-native';
+import { Dimensions, StyleSheet, View, TouchableWithoutFeedback, Text } from 'react-native';
 import Bird from './components/Bird';
 import Obstacles from './components/Obstacles';
 
@@ -27,7 +27,7 @@ export default function App() {
   const [score, setScore]= useState(0)
 
   let gameTimerId
-  let obstaclesLeftTimerId
+  let obstaclesTimerId
   let obstaclesTimerIdTwo
 
   //start bird falling
@@ -85,10 +85,40 @@ export default function App() {
   }, [obstaclesLeftTwo])
 
 
+      //check for collisions
+      useEffect(() => {
+        console.log(obstaclesLeft)
+        console.log(screenWidth/2)
+        console.log(obstaclesLeft > screenWidth/2)
+        if (
+          ((birdBottom < (obstaclesNegHeight + obstacleHeight + 30) ||
+          birdBottom > (obstaclesNegHeight + obstacleHeight + gap -30)) &&
+          (obstaclesLeft > screenWidth/2 -30 && obstaclesLeft < screenWidth/2 + 30 )
+          )
+          || 
+          ((birdBottom < (obstaclesNegHeightTwo + obstacleHeight + 30) ||
+          birdBottom > (obstaclesNegHeightTwo + obstacleHeight + gap -30)) &&
+          (obstaclesLeftTwo > screenWidth/2 -30 && obstaclesLeftTwo < screenWidth/2 + 30 )
+          )
+          ) 
+          {
+          gameOver()
+        }
+      })
+  
+      const gameOver = () => {
+        clearInterval(gameTimerId)
+        clearInterval(obstaclesTimerId)
+        clearInterval(obstaclesTimerIdTwo)
+        setIsGameOver(true)
+      }
+
+
   return (
     <TouchableWithoutFeedback onPress={jump}>
       <View style={styles.container}>
         <StatusBar style="auto" />
+        {isGameOver && <Text style={{ fontSize: 24, marginLeft: 30, marginTop: 50,   zIndex: 3, elevation: 3 }}>{score}</Text>}
         <Bird 
           birdBottom={birdBottom}
           birdLeft={birdLeft}
